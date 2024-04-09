@@ -1,17 +1,17 @@
-#include <DallasTemperature.h>.
-#include <OneWire.h>
+//#include <DallasTemperature.h>.
+//#include <OneWire.h>
 #include <SD.h>
 #include <MS5611.h>
 #include <AccelerometerV2.h>
-#include <Wire.h> b   
+#include <Wire.h> 
 using namespace IntroSatLib;
 
-float temp ;
+//float temp ;
 
 MS5611 ms5611;
 
-OneWire oneWire(PA11);    
-DallasTemperature sensors(&oneWire);
+//OneWire oneWire(PA11);    
+//DallasTemperature sensors(&oneWire);
 
 const int PIN_CHIP_SELECT = PA4; 
 File dataFile_1;
@@ -35,17 +35,13 @@ void setup() {
   } else {
     Serial.println("card initialized.");
   }
-  dataFile_2 = SD.open("all.txt", FILE_WRITE);
   if (!ms5611.begin(MS5611_ULTRA_HIGH_RES)) {
    Serial.println("MS5611 failed, or not present");
-   dataFile_2.println("MS5611 failed, or not present");
   } else {
     Serial.println("MS5611 initialized.");
-    dataFile_2.println("MS5611 initialized.");
   }
-  pinMode(PB12, OUTPUT);
-  sensors.begin();
-  dataFile_2.close();
+//  pinMode(PB12, OUTPUT);
+//  sensors.begin();
 }
 
 void loop() {
@@ -53,8 +49,8 @@ void loop() {
   dataFile_2 = SD.open("all.txt", FILE_WRITE);
   
   
-  sensors.requestTemperatures(); 
-  temp = (sensors.getTempCByIndex(0)); 
+//  sensors.requestTemperatures(); 
+//  temp = (sensors.getTempCByIndex(0)); 
   unsigned long currentTime = millis();
   double realTemperature = ms5611.readTemperature();
   long realPressure = ms5611.readPressure();
@@ -77,7 +73,7 @@ void loop() {
   Serial.print(realTemperature);dataFile_1.print(realTemperature);Serial.print(";");dataFile_1.print(";");
   Serial.print(acc_z);dataFile_1.print(acc_z);Serial.print(";");dataFile_1.print(";");
   Serial.print("1000");dataFile_1.print("1000");Serial.print(";");dataFile_1.print(";");
-  Serial.print(temp);dataFile_1.print(temp);Serial.print(";");dataFile_1.print(";");
+//  Serial.print(temp);dataFile_1.print(temp);Serial.print(";");dataFile_1.print(";");
   Serial.print("1000");dataFile_1.print("1");Serial.print(";");dataFile_1.print(";");
   Serial.print("1000");dataFile_1.print("0");Serial.print(";");dataFile_1.print(";");
   Serial.print(acc_x);dataFile_1.print(acc_x);Serial.print(";");dataFile_1.print(";");
@@ -85,16 +81,16 @@ void loop() {
   Serial.print("1");dataFile_1.print("1");Serial.print(";");dataFile_1.print(";");
   Serial.print("0");dataFile_1.print("0");Serial.print(";");dataFile_1.print(";");
   
-  if (temp >= 10.0){
-  digitalWrite(PB12,LOW);
-  Serial.print("0");            
-  dataFile_1.print("0");
-  }
-  if (temp <= 15.0){
-  digitalWrite(PB12, HIGH);
-  Serial.print("1");
-  dataFile_1.print("1");  
-  }
+//  if (temp >= 10.0){
+//  digitalWrite(PB12,LOW);
+//  Serial.print("0");            
+//  dataFile_1.print("0");
+//  }
+//  if (temp <= 15.0){
+//  digitalWrite(PB12, HIGH);
+//  Serial.print("1");
+//  dataFile_1.print("1");  
+//  }
   
 
 
