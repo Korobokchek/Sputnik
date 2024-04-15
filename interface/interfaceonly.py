@@ -1,4 +1,4 @@
-import os, sys, serial
+import os, sys, serial, time
 import folium
 import numpy as np
 from pyqtgraph import PlotWidget
@@ -129,12 +129,28 @@ class TelemetriaWindow(QMainWindow):
 
     def update_plot(self):
         global prev_data
-        data = serial_read.read_from_com_port("COM11", 115200)
+
+        data = serial_read.read_from_com_port("COM12", 115200)
+        if data[0] == "НЕТ СВЯЗИ":
+            data = prev_data
         RTCtime = QDateTime.currentDateTime().toString("dd.MM.yyyy hh:mm:ss")
-        mission_time = data[1], GPS_h = data[2], baro_h = data[3], shirota = data[4], dolgota = data[5]
-        pressure = data[6], temperature = data[7], accZ = data[8], mono_pressure = data[9]
-        battary_temperature = data[10], battary_voltage = data[11], battary_current = data[12]
-        accX = data[13], accY = data[14], clapanN = data[15], clabsnS = data[16], nagrev = data[17]
+        mission_time = data[1]
+        GPS_h = data[2]
+        baro_h = data[3]
+        shirota = data[4]
+        dolgota = data[5]
+        pressure = data[6]
+        temperature = data[7]
+        accZ = data[8]
+        mono_pressure = data[9]
+        battary_temperature = data[10]
+        battary_voltage = data[11]
+        battary_current = data[12]
+        accX = data[13]
+        accY = data[14]
+        clapanN = data[15]
+        clabsnS = data[16]
+        nagrev = data[17]
 
         if clapanN:
             state = "надув"
@@ -152,41 +168,43 @@ class TelemetriaWindow(QMainWindow):
 
         log_string = f"{RTCtime}\tвремя миссии: {mission_time}c\t{temperature}°C\tускорение х, y, z: {accX, accY, accZ}м/с\tАКБ: {battary_temperature}°C\t{battary_voltage}B\t{battary_current}А\nкоординаты: {shirota}°\t{dolgota}°\t{GPS_h}м\t{pressure}Па\t{baro_h}м (по давлению)\t\t{mono_pressure}Па(в шаре)\t\t{state}\t{nagrev_state}\n\n\n\n"
 
-        self.data_pressure = np.append(self.data_pressure, pressure)
-        self.data_monometr_pressure = np.append(self.data_monometr_pressure, mono_pressure)
-        self.data_battary_temperature = np.append(self.data_battary_temperature, battary_temperature)
-        self.data_battary_voltage = np.append(self.data_battary_voltage, battary_voltage)
-        self.data_battary_amperage = np.zeros(self.data_battary_amperage, battary_current)
-        self.data_accZ = np.zeros(self.data_accZ, accZ)
-
+        self.data_pressure = np.append(self.data_pressure[1:], pressure)
+        self.data_monometr_pressure = np.append(self.data_monometr_pressure[1:], mono_pressure)
+        self.data_battary_temperature = np.append(self.data_battary_temperature[1:], battary_temperature)
+        self.data_battary_voltage = np.append(self.data_battary_voltage[1:], battary_voltage)
+        self.data_battary_amperage = np.append(self.data_battary_amperage[1:], battary_current)
+        self.data_accZ = np.append(self.data_accZ[1:], accZ)
         prev_data = data
         self.x += 0.1
 
-        self.pressure_graph.plot(self.x, self.data_pressure, clear=False, pen={'color': 'b', 'width': 4})
+        self.pressure_graph.plot(self.x, self.data_pressure, clear=True, pen={'color': 'b', 'width': 4})
         self.monometr_pressure_graph.plot(self.x, self.data_monometr_pressure, clear=True, pen={'color': 'w', 'width': 4})
         self.battary_temperature_graph.plot(self.x, self.data_battary_temperature, clear=True, pen={'color': 'b', 'width': 4})
         self.battary_voltage_graph.plot(self.x, self.data_battary_voltage, clear=True, pen={'color': 'g', 'width': 4})
-        self.battary_amperage_graph.plot(self.x, self.battary_amperage_graph, clear=True, pen={'color': 'm', 'width': 4})
+        self.battary_amperage_graph.plot(self.x, self.data_battary_amperage, clear=True, pen={'color': 'm', 'width': 4})
         self.accZ_graph.plot(self.x, self.data_accZ, clear=True, pen={'color': 'c', 'width': 4})
 
-        self.datetimeLabel.setText(f"{RTCtime}\t{shirota}° {dolgota}° {GPS_h}м")
-        self.datetimeLabel.setStyleSheet("font-size: 22px; color: white; font-weight: bold;")
+        self.datatimeLabel.setText(f"{RTCtime}\t{shirota}° {dolgota}° {GPS_h}м")
+        self.datatimeLabel.setStyleSheet("font-size: 22px; color: white; font-weight: bold;")
 
         self.logsfield.append(log_string)
+        file = open("logs.txt", 'a', encoding='utf-8')
+        file.write(log_string)
+        file.close()
 
     def update_text(self):
-        # global port, ser
-        file = open("logs.txt", 'w', encoding='utf-8')
+        ser = serial.Serial("COM12", 115200)
+        file = open("logs.txt", 'a', encoding='utf-8')
         text = self.inputfield.text().strip()
 
         match text:
             case "зыз":
-                text = "зыыыыыыыыыыыыыыыыыыыыыыыыыыыыз"
+                text = "зыыыыыыыыыыыыыыыыыыыыыыыыыыыыз\n"
             case "open":
-                text = "Система сдува запущена"
-                # ser.write(b"1103_on\n")
+                text = "Система сдува запущена\n"
+                ser.write(b"1103")
             case "close":
-                text = "Система надува запущена"
+                text = "Система надува запущена\n"
                 # ser.write(b"1103_off\n")
             case "clear":
                 text = ''
@@ -211,7 +229,7 @@ class TelemetriaWindow(QMainWindow):
 
 
 if __name__ == "__main__":
-    prev_data = []
+    prev_data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     m = folium.Map(location=[55.9297334, 37.6173], zoom_start=10)
     marker = folium.Marker(location=[55.9297334, 37.6173], popup='Мое местоположение')
