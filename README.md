@@ -46,28 +46,29 @@
 #F_END
 ```
 ### Пример программы
-
-+ #F_BEGIN;
-    + #F_NAME power;
-    + #F_ARGS_BEGIN;
-        + @INT x;
-        + @INT y;
-    + #F_ARGS_END;
-    + #F_VARS_BEGIN;
-        + @INT t1;
-        + @INT t2;
-    + #F_VARS_END;
-    + #F_BODY_BEGIN;
-        + #IF < y #2
-            + #F_RETURN x;
-        + #ELSE
-            +  #- y y #1;
-            + #power t1 x y;
-            + #* x t1;
-        + F_RETURN x;
-        + #ENDIF;
-    + #F_BODY_END;
-+ #F_END
+```
+#F_BEGIN;
+    #F_NAME power;
+    #F_ARGS_BEGIN;
+        @INT x;
+        @INT y;
+    #F_ARGS_END;
+    #F_VARS_BEGIN;
+        @INT t1;
+        @INT t2;
+    #F_VARS_END;
+    #F_BODY_BEGIN;
+        #IF < y #2
+            #F_RETURN x;
+        #ELSE
+            #- y y #1;
+            #power t1 x y;
+            #* x t1;
+        F_RETURN x;
+        #ENDIF;
+    #F_BODY_END;
+#F_END
+```
 
 ## Спецификация ByteCode
 
