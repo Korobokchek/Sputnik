@@ -1,4 +1,4 @@
-## Спецификация языка .Ip (Intermidiatly Presentation)
+## Спецификация языка .Ir (Intermediate Representation)
 
 ### Описание языка
 - .Ip - это простой язык, который используется для обучения основам программирования. Он имеет небольшой набор команд и поддерживает только целочисленные вычисления. 
@@ -27,22 +27,24 @@
 - "Print" используется для вывода информации в терминал.
 
 ### Пример программы
-+ #F_BEGIN;
-    + #F_NAME name;
-    + #F_ARGS_BEGIN;
-        + @INT z;
-        + @INT q;
-    + #F_ARGS_END;
-    + #F_VARS_BEGIN;
-       + @INT x;
-       + @INT y;
-    + #F_VARS_END;
-    + #F_BODY_BEGIN;
-       + #+ x y z;
-       + #* q x y;
-    + #F_RETURN;
-    + #F_BODY_END;
-+ #F_END# name x y;
+```
+#F_BEGIN;
+    #F_NAME name;
+    #F_ARGS_BEGIN;
+        @INT z;
+        @INT q;
+    #F_ARGS_END;
+    #F_VARS_BEGIN;
+       @INT x;
+       @INT y;
+    #F_VARS_END;
+    #F_BODY_BEGIN;
+       #+ x y z;
+       #* q x y;
+    #F_RETURN;
+    #F_BODY_END;
+#F_END
+```
 ### Пример программы
 
 + #F_BEGIN;
