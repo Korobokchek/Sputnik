@@ -28,22 +28,22 @@ SSYP_0 поддерживает следующие выражения:
 - "Print" используется для вывода информации в терминал.
 
 ### Пример программы
-#F_BEGIN;\n
- #F_NAME name;
- #F_ARGS_BEGIN;
-   @INT z;
-   @INT q;
- #F_ARGS_END;
- #F_VARS_BEGIN;
-  @INT x;
-  @INT y;
- #F_VARS_END;
- #F_BODY_BEGIN;
-  #+ x y z;
-  #* q x y;
- #F_RETURN;
-#F_BODY_END;
-#F_END# name x y
+1.#F_BEGIN;
+1. #F_NAME name;
+1. #F_ARGS_BEGIN;
+1.   @INT z;
+1.   @INT q;
+1. #F_ARGS_END;
+1. #F_VARS_BEGIN;
+1.  @INT x;
+1.  @INT y;
+1. #F_VARS_END;
+1. #F_BODY_BEGIN;
+1.  #+ x y z;
+1.  #* q x y;
+1. #F_RETURN;
+1.#F_BODY_END;
+1.#F_END# name x y
 
 
 ### Процедуры
