@@ -28,20 +28,20 @@
 
 ### Пример программы
 + #F_BEGIN;
- + #F_NAME name;
- + #F_ARGS_BEGIN;
-   + @INT z;
-   + @INT q;
- + #F_ARGS_END;
- + #F_VARS_BEGIN;
-  + @INT x;
-  + @INT y;
- + #F_VARS_END;
- + #F_BODY_BEGIN;
-  + #+ x y z;
-  + #* q x y;
- + #F_RETURN;
-+ #F_BODY_END;
+    + #F_NAME name;
+    + #F_ARGS_BEGIN;
+        + @INT z;
+        + @INT q;
+    + #F_ARGS_END;
+    + #F_VARS_BEGIN;
+       + @INT x;
+       + @INT y;
+    + #F_VARS_END;
+    + #F_BODY_BEGIN;
+       + #+ x y z;
+       + #* q x y;
+    + #F_RETURN;
+    + #F_BODY_END;
 + #F_END# name x y;
 ### Пример программы
 
